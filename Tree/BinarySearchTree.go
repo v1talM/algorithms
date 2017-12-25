@@ -11,15 +11,8 @@ import (
  */
 func main() {
 	root := Model.NewBinaryTreeNode(0)
-	root.CreateBSTTree(8,4,2,1,3,5,10,9)
+	root.CreateBSTTree(9,5,3)
 	tree := Model.NewBinaryTree(root)
 	tree.InOrderWalk()
-	node := Model.TreeSearchRecursive(root, 2)
-	node2 := Model.TreeSearchIteration(root, 2)
-	fmt.Println("\nresult:", node)
-	fmt.Println("result:", node2)
-	min := tree.Minimum()
-	fmt.Println(min)
-	max := tree.Maxmum()
-	fmt.Println(max)
+	fmt.Println(root)
 }

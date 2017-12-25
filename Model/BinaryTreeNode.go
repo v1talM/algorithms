@@ -5,6 +5,7 @@ type BinaryTreeNode struct {
 	parent,
 	lChild,
 	rChild *BinaryTreeNode
+	height int
 }
 
 func NewBinaryTreeNode(e interface{}) *BinaryTreeNode {
@@ -45,15 +46,28 @@ func (this *BinaryTreeNode) GetRChild() *BinaryTreeNode {
 	return this.rChild
 }
 
+func (this *BinaryTreeNode) GetParent() *BinaryTreeNode {
+	if this.HasParent() {
+		return this.parent
+	}
+	return nil
+}
+
 func (this *BinaryTreeNode) SetParent(node *BinaryTreeNode)  {
 	this.parent = node
 }
 
 func (this *BinaryTreeNode) CutOffParent()  {
 	if this.HasParent() {
+		parent := this.GetParent()
 		this.SetParent(nil)
 		this.lChild = nil
 		this.rChild = nil
+		if parent.GetLChild() == this {
+			parent.lChild = nil
+		} else {
+			parent.rChild = nil
+		}
 	}
 }
 
@@ -61,6 +75,7 @@ func (this *BinaryTreeNode) SetLChild(node *BinaryTreeNode) *BinaryTreeNode {
 	oldChild := this.lChild
 	if this.HasLChild() {
 		oldChild.CutOffParent()
+		this.SetLChild(node)
 	} else {
 		this.lChild = node
 	}
@@ -71,6 +86,7 @@ func (this *BinaryTreeNode) SetRChild(node *BinaryTreeNode) *BinaryTreeNode {
 	oldChild := this.rChild
 	if this.HasRChild() {
 		oldChild.CutOffParent()
+		this.SetRChild(node)
 	} else {
 		this.rChild = node
 	}

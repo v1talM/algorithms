@@ -17,31 +17,34 @@ func (root *BinaryTreeNode) CreateBSTTree(data ...interface{}) {
 	}
 }
 
+func (root *BinaryTreeNode) CreateAVLTree(data ...interface{}) {
+	root.SetData(data[0])
+
+}
+
 func (tree *BinaryTree) InOrderWalk() {
 	fmt.Println("中序遍历结果:")
 	inOrderWalk(tree.root)
 }
 
-func TreeSearchRecursive(node *BinaryTreeNode, k interface{}) *BinaryTreeNode {
-	if node == nil || k.(int) == node.GetData().(int) {
-		return node
-	}
-	if k.(int) < node.GetData().(int) {
-		return TreeSearchRecursive(node.GetLChild(), k)
-	} else {
-		return TreeSearchRecursive(node.GetRChild(), k)
-	}
+func (tree *BinaryTree) Search(key interface{}) *BinaryTreeNode {
+	return searchTree(tree.root, key)
 }
 
-func TreeSearchIteration(node *BinaryTreeNode, k interface{}) *BinaryTreeNode {
-	for node != nil && k.(int) != node.GetData().(int) {
-		if k.(int) < node.GetData().(int) {
-			node = node.GetLChild()
-		} else {
-			node = node.GetRChild()
-		}
+func (tree *BinaryTree) InsertNode(key interface{}) bool {
+	exist := tree.Search(key)
+	if exist != nil {
+		return false
 	}
-	return node
+	return insertNode(tree.root, key)
+}
+
+func (tree *BinaryTree) DeleteNode(key interface{}) bool {
+	exist := tree.Search(key)
+	if exist == nil {
+		return false
+	}
+	return deleteNode(exist)
 }
 
 func inOrderWalk(node *BinaryTreeNode)  {
@@ -52,38 +55,63 @@ func inOrderWalk(node *BinaryTreeNode)  {
 	}
 }
 
-func insertNode(node *BinaryTreeNode, data interface{})  {
+func insertNode(node *BinaryTreeNode, data interface{}) bool {
 		if data.(int) < node.GetData().(int) {
 			if node.HasLChild() {
 				insertNode(node.GetLChild(), data)
 			} else {
-				child := NewBinaryTreeNode(data)
-				child.SetParent(node)
-				node.SetLChild(child)
+				newNode := NewBinaryTreeNode(data)
+				newNode.SetParent(node)
+				node.SetLChild(newNode)
 			}
 		} else {
 			if node.HasRChild() {
 				insertNode(node.GetRChild(), data)
 			} else {
-				child := NewBinaryTreeNode(data)
-				child.SetParent(node)
-				node.SetRChild(child)
+				newNode := NewBinaryTreeNode(data)
+				newNode.SetParent(node)
+				node.SetRChild(newNode)
 			}
 		}
+		return true
 }
 
-func (tree *BinaryTree) Minimum() *BinaryTreeNode {
-	node := tree.root
-	for node.GetLChild() != nil {
-		node = node.GetLChild()
+func searchTree(node *BinaryTreeNode, key interface{}) *BinaryTreeNode {
+	for node != nil && key.(int) != node.GetData().(int) {
+		if key.(int) < node.GetData().(int) {
+			node = node.GetLChild()
+			return searchTree(node, key)
+		} else {
+			node = node.GetRChild()
+			return searchTree(node, key)
+		}
 	}
 	return node
 }
 
-func (tree *BinaryTree) Maxmum() *BinaryTreeNode {
-	node := tree.root
-	for node.GetRChild() != nil {
-		node = node.GetRChild()
+func deleteNode(node *BinaryTreeNode) bool {
+	if node.HasLChild() && node.HasRChild() {
+		//寻找当前节点的后继元素
+		iNode := node.GetRChild()
+		for iNode.GetLChild() != nil {
+			iNode = iNode.GetLChild()
+		}
+		node.SetData(iNode.GetData())
+		return deleteNode(iNode)
+	} else if node.HasLChild() {
+		parent := node.GetParent()
+		iNode := node.GetLChild()
+		iNode.SetParent(parent)
+		parent.SetLChild(iNode)
+		node.CutOffParent()
+	} else if node.HasRChild() {
+		parent := node.GetParent()
+		iNode := node.GetRChild()
+		iNode.SetParent(parent)
+		parent.SetRChild(iNode)
+		node.CutOffParent()
+	} else {
+		node.CutOffParent()
 	}
-	return node
+	return true
 }
