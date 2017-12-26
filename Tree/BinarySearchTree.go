@@ -15,10 +15,4 @@ func main() {
 	bst_tree := Model.NewBinaryTree(bst_root)
 	bst_tree.InOrderWalk()
 	fmt.Println("\nBST树的根结点为：",bst_root)
-	//创建AVL树
-	avl_root := Model.NewBinaryTreeNode(0)
-	avl_root = avl_root.CreateAVLTree(1,2,3,4,5,6)
-	avl_tree := Model.NewBinaryTree(avl_root)
-	avl_tree.InOrderWalk()
-	fmt.Println("\nAVL树的根结点为:", avl_root)
 }

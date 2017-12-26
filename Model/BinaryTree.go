@@ -17,14 +17,6 @@ func (root *BinaryTreeNode) CreateBSTTree(data ...interface{}) {
 	}
 }
 
-func (root *BinaryTreeNode) CreateAVLTree(data ...interface{}) *BinaryTreeNode {
-	root.SetData(data[0])
-	for i := 1; i < len(data); i++ {
-		root = InsertAVLNode(root, data[i])
-	}
-	return root
-}
-
 func (tree *BinaryTree) InOrderWalk() {
 	fmt.Println("中序遍历结果:")
 	inOrderWalk(tree.root)
@@ -76,7 +68,6 @@ func insertNode(node *BinaryTreeNode, data interface{}) bool {
 			node.SetRChild(newNode)
 		}
 	}
-	node.height = max(height(node.GetLChild()), height(node.GetRChild())) + 1
 	return true
 }
 
@@ -120,97 +111,4 @@ func deleteNode(node *BinaryTreeNode) bool {
 	return true
 }
 
-func height(node *BinaryTreeNode) int {
-	if node == nil {
-		return 0
-	}
-	lh, rh := 0, 0
-	lChild := node.GetLChild()
-	rChild := node.GetRChild()
-	for lChild != nil {
-		lh++
-		lChild = lChild.GetLChild()
-	}
-	for rChild != nil{
-		rh++
-		rChild = rChild.GetRChild()
-	}
-	if lh > rh {
-		return lh
-	}
-	return rh
-}
 
-func max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func InsertAVLNode(node *BinaryTreeNode, data interface{}) *BinaryTreeNode {
-	if node == nil {
-		node = NewBinaryTreeNode(data)
-	} else if data.(int) < node.GetData().(int) {
-		node.lChild = InsertAVLNode(node.GetLChild(), data)
-		//插入后失衡
-		if height(node.GetLChild()) - height(node.GetRChild()) == 1 {
-			if data.(int) < node.GetLChild().GetData().(int) {
-				//右旋
-				node = rightRotation(node)
-			} else {
-				//先左旋、再右旋
-				node = leftRightRotation(node)
-			}
-		}
-	} else {
-		node.rChild = InsertAVLNode(node.GetRChild(), data)
-		//插入后失衡
-		if height(node.GetRChild()) - height(node.GetLChild()) == 1 {
-			if data.(int) > node.GetRChild().GetData().(int) {
-				//左旋
-				node = leftRotation(node)
-			} else {
-				//先右旋、再左旋
-				node = rightLeftRotation(node)
-			}
-		}
-	}
-	node.height = max(height(node.GetLChild()), height(node.GetRChild())) + 1
-	return node
-}
-
-func leftRotation(node *BinaryTreeNode) *BinaryTreeNode {
-	prChild := node.GetRChild()
-	node.rChild = prChild.GetLChild()
-	if prChild.HasLChild() {
-		prChild.GetLChild().CutOffParent()
-		prChild.GetLChild().SetParent(node)
-	}
-	prChild.SetLChild(node)
-	node.SetParent(prChild)
-	prChild.CutOffParent()
-	return prChild
-}
-
-func rightRotation(node *BinaryTreeNode) *BinaryTreeNode {
-	plChild := node.GetLChild()
-	node.lChild = plChild.GetRChild()
-	if plChild.HasRChild() {
-		plChild.GetRChild().CutOffParent()
-		plChild.GetRChild().SetParent(node)
-	}
-	plChild.SetRChild(node)
-	node.SetParent(plChild)
-	plChild.CutOffParent()
-	return plChild
-}
-
-func leftRightRotation(node *BinaryTreeNode) *BinaryTreeNode {
-
-	return node
-}
-
-func rightLeftRotation(node *BinaryTreeNode) *BinaryTreeNode {
-	return node
-}
