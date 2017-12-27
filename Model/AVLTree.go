@@ -41,24 +41,29 @@ func insertAVLNode(node *AVLTreeNode, data interface{}) *AVLTreeNode {
 		node = NewAVLTreeNode(data)
 	} else if data.(int) < node.GetData().(int) {
 		node.SetLChild(insertAVLNode(node.GetLChild(), data))
-		//插入之后失衡
-		if height(node.GetLChild()) - height(node.GetRChild()) == 2 {
-			if data.(int) < node.GetLChild().GetData().(int) {
-				//右单旋
-				node = rightRotation(node)
-			} else {
-				//先左旋再右旋
-			}
-		}
 	} else {
 		node.rChild = insertAVLNode(node.GetRChild(), data)
-		//插入之后失衡
+	}
+
+	//插入之后失衡
+	if node.HasLChild() && node.HasRChild() {
+		fmt.Println(node, height(node), node.GetLChild(), height(node.GetLChild()))
 		if height(node.GetRChild()) - height(node.GetLChild()) == 2 {
 			if data.(int) > node.GetRChild().GetData().(int) {
 				//左单旋
 				node = leftRotation(node)
 			} else {
 				//先右旋再左旋
+				node = rightLeftRotation(node)
+			}
+		}
+		if height(node.GetLChild()) - height(node.GetRChild()) == 2 {
+			if data.(int) < node.GetLChild().GetData().(int) {
+				//右单旋
+				node = rightRotation(node)
+			} else {
+				//先左旋再右旋
+				node = leftRightRotation(node)
 			}
 		}
 	}
@@ -68,7 +73,7 @@ func insertAVLNode(node *AVLTreeNode, data interface{}) *AVLTreeNode {
 
 func height(node *AVLTreeNode) int {
 	if node == nil {
-		return 0
+		return -1
 	}
 	lh, rh := 0, 0
 	lChild := node.GetLChild()
@@ -85,6 +90,17 @@ func height(node *AVLTreeNode) int {
 		return lh
 	}
 	return rh
+}
+
+func PrintAVLTree(tree *AVLTreeNode, height int)  {
+	if tree != nil {
+		PrintAVLTree(tree.GetRChild(), height + 1)
+		for i := 0; i < height; i++ {
+			fmt.Printf("    ")
+		}
+		fmt.Println(tree.GetData())
+		PrintAVLTree(tree.GetLChild(), height + 1)
+	}
 }
 
 func max(x, y int) int {
@@ -106,4 +122,19 @@ func rightRotation(node *AVLTreeNode) *AVLTreeNode {
 	node.SetLChild(lchild.GetRChild())
 	lchild.SetRChild(node)
 	return lchild
+}
+
+func leftRightRotation(node *AVLTreeNode) *AVLTreeNode {
+	lc := node.GetLChild()
+	node.lChild = leftRotation(lc)
+	node = rightRotation(node)
+	return node
+}
+
+func rightLeftRotation(node *AVLTreeNode) *AVLTreeNode {
+	fmt.Println(node)
+	rc := node.GetRChild()
+	node.rChild = rightRotation(rc)
+	node = leftRotation(node)
+	return node
 }
