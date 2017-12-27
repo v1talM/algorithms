@@ -6,9 +6,10 @@ import (
 )
 
 func main()  {
-	 avl := Model.NewAVLTree(6,5,4,3,2,1)
-	 avl.InOrderWalk()
-	 avl.InsertAVLNode(7)
+	 avl := Model.NewAVLTree(50,40,60)
+	 avl.InsertAVLNode(55)
+	 avl.InsertAVLNode(70)
+	 avl.InsertAVLNode(53)
 	 avl.InOrderWalk()
 	 fmt.Println("\n根结点:", avl.GetRoot())
 }

@@ -24,7 +24,6 @@ func (this *AVLTreeNode) GetData() interface{} {
 	return this.data
 }
 
-
 func (this *AVLTreeNode) HasLChild() bool {
 	if this.lChild != nil {
 		return true
