@@ -89,6 +89,17 @@ func height(node *AVLTreeNode) int {
 	return rh
 }
 
+func PrintAVLTree(tree *AVLTreeNode, height int)  {
+	if tree != nil {
+		PrintAVLTree(tree.GetRChild(), height + 1)
+		for i := 0; i < height; i++ {
+			fmt.Printf("    ")
+		}
+		fmt.Println(tree.GetData())
+		PrintAVLTree(tree.GetLChild(), height + 1)
+	}
+}
+
 func max(x, y int) int {
 	if x > y {
 		return x

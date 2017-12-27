@@ -50,6 +50,17 @@ func inOrderWalk(node *BinaryTreeNode)  {
 	}
 }
 
+func PrintBinaryTree(tree *BinaryTreeNode, height int)  {
+	if tree != nil {
+		PrintBinaryTree(tree.GetRChild(), height + 1)
+		for i := 0; i < height; i++ {
+			fmt.Printf("    ")
+		}
+		fmt.Println(tree.GetData())
+		PrintBinaryTree(tree.GetLChild(), height + 1)
+	}
+}
+
 func insertNode(node *BinaryTreeNode, data interface{}) bool {
 	if data.(int) < node.GetData().(int) {
 		if node.HasLChild() {
