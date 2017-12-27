@@ -42,7 +42,7 @@ func insertAVLNode(node *AVLTreeNode, data interface{}) *AVLTreeNode {
 	} else if data.(int) < node.GetData().(int) {
 		node.SetLChild(insertAVLNode(node.GetLChild(), data))
 		//插入之后失衡
-		if height(node.GetLChild()) - height(node.GetRChild()) == 1 {
+		if height(node.GetLChild()) - height(node.GetRChild()) == 2 {
 			if data.(int) < node.GetLChild().GetData().(int) {
 				//右单旋
 				node = rightRotation(node)
@@ -53,7 +53,7 @@ func insertAVLNode(node *AVLTreeNode, data interface{}) *AVLTreeNode {
 	} else {
 		node.rChild = insertAVLNode(node.GetRChild(), data)
 		//插入之后失衡
-		if height(node.GetRChild()) - height(node.GetLChild()) == 1 {
+		if height(node.GetRChild()) - height(node.GetLChild()) == 2 {
 			if data.(int) > node.GetRChild().GetData().(int) {
 				//左单旋
 				node = leftRotation(node)
